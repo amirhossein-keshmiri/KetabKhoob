@@ -38,13 +38,12 @@ namespace Shop.Domain.ProductAgg
             Slug = slug.ToSlug();
             SeoData = seoData;
         }
-        public void Edit(string title, string imageName, string description, long categoryId,
+        public void Edit(string title, string description, long categoryId,
             long subCategoryId, long? secondarySubCategoryId, string slug, 
             IProductDomainService domainService, SeoData seoData)
         {
             Guard(title, slug, description, domainService);
             Title = title;
-            ImageName = imageName;
             Description = description;
             CategoryId = categoryId;
             SubCategoryId = subCategoryId;
@@ -52,21 +51,25 @@ namespace Shop.Domain.ProductAgg
             Slug = slug.ToSlug();
             SeoData = seoData;
         }
-
+        public void SetProductImage(string imageName)
+        {
+            NullOrEmptyDomainDataException.CheckString(imageName, nameof(imageName));
+            ImageName = imageName;
+        }
         public void AddImage(ProductImage image)
         {
             image.ProductId = Id;
             Images.Add(image);
         }
 
-        public void RemoveImage(long id)
+        public string RemoveImage(long id)
         {
             var image = Images.FirstOrDefault(f => f.Id == id);
             if (image == null)
                 throw new NullOrEmptyDomainDataException("عکس یافت نشد");
 
             Images.Remove(image);
-            //return image.ImageName;
+            return image.ImageName;
         }
 
         public void SetSpecification(List<ProductSpecification> specifications)

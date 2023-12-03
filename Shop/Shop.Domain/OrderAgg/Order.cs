@@ -106,7 +106,7 @@ namespace Shop.Domain.OrderAgg
             Address = address; 
         }
 
-        public void ChangeOrderGuard()
+        private void ChangeOrderGuard()
         {
             if (Status != OrderStatus.Pending)
                 throw new InvalidDomainDataException("امکان ویرایش این سفارش وجود ندارد");
