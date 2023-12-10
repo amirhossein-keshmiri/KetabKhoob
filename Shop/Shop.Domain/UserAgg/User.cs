@@ -61,16 +61,15 @@ namespace Shop.Domain.UserAgg
             Addresses.Add(address);
         }
 
-        public void EditAddress(UserAddress address)
+        public void EditAddress(UserAddress address, long addressId)
         {
-            var oldAddress = Addresses.FirstOrDefault(f=>f.Id ==  address.Id) 
+            var oldAddress = Addresses.FirstOrDefault(f=>f.Id == addressId) 
                         ?? throw new NullOrEmptyDomainDataException("Address Not Found");
 
-            //if (oldAddress == null)
-            //    throw new NullOrEmptyDomainDataException("Address Not Found");
+            oldAddress.Edit(address.State, address.City, address.PostalCode,
+                address.PostalAddress, address.PhoneNumber,
+                address.Name, address.Family, address.NationalCode);
 
-            Addresses.Remove(oldAddress);
-            Addresses.Add(address);
         }
 
         public void DeleteAddress(long addressId)
