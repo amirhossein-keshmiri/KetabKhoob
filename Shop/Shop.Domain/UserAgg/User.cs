@@ -2,7 +2,6 @@
 using Common.Domain.Exceptions;
 using Shop.Domain.UserAgg.Enums;
 using Shop.Domain.UserAgg.Services;
-using System.Net;
 
 namespace Shop.Domain.UserAgg
 {
@@ -43,10 +42,10 @@ namespace Shop.Domain.UserAgg
             Gender = gender;
         }
 
-        public static User RegisterUser(string phoneNumber,string email,string password,
+        public static User RegisterUser(string phoneNumber,string password,
             IUserDomainService domainUserService)
         {
-            return new User("","",phoneNumber,email,password,Gender.None,domainUserService);
+            return new User("","",phoneNumber,"",password,Gender.None,domainUserService);
         }
         public void SetAvatar(string imageName)
         {
