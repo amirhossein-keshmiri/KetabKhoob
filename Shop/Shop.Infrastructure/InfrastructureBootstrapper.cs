@@ -16,6 +16,7 @@ using Shop.Infrastructure.Persistent.Ef.SiteEntities.Repositories;
 using Shop.Infrastructure.Persistent.Ef.UserAgg;
 using Shop.Infrastructure.Persistent.Ef;
 using Microsoft.EntityFrameworkCore;
+using Shop.Infrastructure.Persistent.Dapper;
 
 namespace Shop.Infrastructure;
 public class InfrastructureBootstrapper
@@ -35,7 +36,7 @@ public class InfrastructureBootstrapper
 
         //services.AddSingleton<ICustomPublisher, CustomPublisher>();
 
-        //services.AddTransient(_ => new DapperContext(connectionString));
+        services.AddTransient(_ => new DapperContext(connectionString));
         services.AddDbContext<ShopContext>(option =>
         {
             option.UseSqlServer(connectionString);
