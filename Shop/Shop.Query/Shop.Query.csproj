@@ -6,4 +6,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Comments\" />
+    <Folder Include="Users\" />
+    <Folder Include="SiteEntities\" />
+    <Folder Include="Sellers\" />
+    <Folder Include="Roles\" />
+    <Folder Include="Products\" />
+    <Folder Include="Orders\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.Query\Common.Query.csproj" />
+    <ProjectReference Include="..\Shop.Infrastructure\Shop.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
