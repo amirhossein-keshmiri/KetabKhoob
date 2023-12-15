@@ -13,7 +13,10 @@ namespace Shop.Domain.CategoryAgg
         public SeoData SeoData { get; private set; }
         public long? ParentId { get; private set; }
         public List<Category> Childs { get; private set; }
+        private Category()
+        {
 
+        }
         public Category(string title, string slug, SeoData seoData, ICategoryDomainService service)
         {
             slug = slug?.ToSlug();

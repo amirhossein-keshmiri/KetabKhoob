@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Shop.Domain\Shop.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Persistent.Ef\CommentAgg\" />
-  </ItemGroup>
-
 </Project>

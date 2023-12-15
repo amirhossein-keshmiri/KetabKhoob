@@ -10,7 +10,10 @@ namespace Shop.Domain.SellerAgg
         public int Count { get; private set; }
         public int Price { get; private set; }
         public int? DiscountPercentage { get; private set; }
-
+        private SellerInventory()
+        {
+            
+        }
         public SellerInventory(long productid, int count, int price, int? discountPercentage = null)
         {
             if (price < 1 || count < 0)
