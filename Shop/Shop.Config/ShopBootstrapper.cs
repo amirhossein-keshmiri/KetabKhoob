@@ -14,6 +14,7 @@ using Shop.Domain.UserAgg.Services;
 using Shop.Infrastructure;
 using Shop.Query.Categories.GetById;
 using System.Reflection;
+using Shop.Presentation.Facade;
 
 namespace Shop.Config;
 public static class ShopBootstrapper
@@ -35,7 +36,7 @@ public static class ShopBootstrapper
 
         services.AddValidatorsFromAssembly(typeof(CreateRoleCommandValidator).Assembly);
 
-        //services.InitFacadeDependency();
+        services.InitFacadeDependency();
     }
 }
 
