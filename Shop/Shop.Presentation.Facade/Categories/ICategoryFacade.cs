@@ -10,7 +10,7 @@ public interface ICategoryFacade
     Task<OperationResult<long>> AddChild(AddChildCategoryCommand command);
     Task<OperationResult> Edit(EditCategoryCommand command);
     Task<OperationResult<long>> Create(CreateCategoryCommand command);
-    //Task<OperationResult> Remove(long categoryId);
+    Task<OperationResult> Remove(long categoryId);
 
 
     Task<CategoryDto> GetCategoryById(long id);

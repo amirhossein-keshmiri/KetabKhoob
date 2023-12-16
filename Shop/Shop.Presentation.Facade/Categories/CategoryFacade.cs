@@ -3,6 +3,7 @@ using MediatR;
 using Shop.Application.Categories.AddChild;
 using Shop.Application.Categories.Create;
 using Shop.Application.Categories.Edit;
+using Shop.Application.Categories.Remove;
 using Shop.Query.Categories.DTOs;
 using Shop.Query.Categories.GetById;
 using Shop.Query.Categories.GetByParentId;
@@ -33,6 +34,11 @@ internal class CategoryFacade : ICategoryFacade
         return await _mediator.Send(command);
     }
 
+    public async Task<OperationResult> Remove(long categoryId)
+    {
+        return await _mediator.Send(new RemoveCategoryCommand(categoryId));
+    }
+
     public async Task<List<CategoryDto>> GetCategories()
     {
         return await _mediator.Send(new GetCategoryListQuery());
@@ -47,5 +53,6 @@ internal class CategoryFacade : ICategoryFacade
     {
         return await _mediator.Send(new GetCategoryByIdQuery(id));
     }
+
 }
 
