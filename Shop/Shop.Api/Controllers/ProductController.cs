@@ -1,5 +1,4 @@
 ﻿using Common.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Products.AddImage;
 using Shop.Application.Products.Create;
