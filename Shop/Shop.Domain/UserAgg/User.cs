@@ -12,9 +12,9 @@ namespace Shop.Domain.UserAgg
             
         }
         public User(string name, string family, string phoneNumber, string email
-            , string password, Gender gender, IUserDomainService domainUserService)
+            , string password, Gender gender, IUserDomainService userDomainService)
         {
-            Guard(phoneNumber, email, domainUserService);
+            Guard(phoneNumber, email, userDomainService);
             Name = name;
             Family = family;
             PhoneNumber = phoneNumber;
@@ -22,6 +22,7 @@ namespace Shop.Domain.UserAgg
             Password = password;
             AvatarName = "avatar.png";
             Gender = gender;
+            IsActive = true;
         }
 
         public string Name { get; private set; }
@@ -30,15 +31,17 @@ namespace Shop.Domain.UserAgg
         public string Email { get; private set; }
         public string Password { get; private set; }
         public string AvatarName { get; set; }
+        public bool IsActive { get; set; }
+
         public Gender Gender { get; private set; }
         public List<UserRole> Roles { get; private set; }
         public List<Wallet> Wallets { get; private set; }
         public List<UserAddress> Addresses { get; private set; }
 
         public void Edit(string name, string family, string phoneNumber, string email
-            , Gender gender, IUserDomainService domainUserService)
+            , Gender gender, IUserDomainService userDomainService)
         {
-            Guard(phoneNumber, email,domainUserService);
+            Guard(phoneNumber, email, userDomainService);
             Name = name;
             Family = family;
             PhoneNumber = phoneNumber;
@@ -47,9 +50,9 @@ namespace Shop.Domain.UserAgg
         }
 
         public static User RegisterUser(string phoneNumber,string password,
-            IUserDomainService domainUserService)
+            IUserDomainService userDomainService)
         {
-            return new User("","",phoneNumber,"",password,Gender.None,domainUserService);
+            return new User("","",phoneNumber,"",password,Gender.None, userDomainService);
         }
         public void SetAvatar(string imageName)
         {
@@ -95,19 +98,23 @@ namespace Shop.Domain.UserAgg
             Roles.Clear();
             Roles.AddRange(roles);
         }
-        public void Guard(string phoneNumber, string email,IUserDomainService domainUserService)
+        public void Guard(string phoneNumber, string email,IUserDomainService userDomainService)
         {
             NullOrEmptyDomainDataException.CheckString(phoneNumber, nameof(phoneNumber));
-            NullOrEmptyDomainDataException.CheckString(email, nameof(email));
 
             if (phoneNumber.Length != 11)
                 throw new InvalidDomainDataException("شماره موبایل نامعتبر است.");
 
-            if(email.IsValidEmail() == false)
-                throw new InvalidDomainDataException("ایمیل نامعتبر است.");
+            if (!string.IsNullOrWhiteSpace(email))
+                if (email.IsValidEmail() == false)
+                    throw new InvalidDomainDataException(" ایمیل  نامعتبر است");
 
-            if(email != Email)
-                if(domainUserService.IsEmailExist(email))
+            if (phoneNumber != PhoneNumber)
+                if (userDomainService.PhoneNumberIsExist(phoneNumber))
+                    throw new InvalidDomainDataException("شماره موبایل تکراری است");
+
+            if (email != Email)
+                if(userDomainService.IsEmailExist(email))
                     throw new InvalidDomainDataException("ایمیل تکراری است.");
         }
     }
