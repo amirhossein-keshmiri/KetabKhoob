@@ -23,19 +23,6 @@ public class AuthController : ApiController
     [HttpPost("login")]
     public async Task<ApiResult<string?>> Login(LoginViewModel loginViewModel)
     {
-        if(ModelState.IsValid == false)
-        {
-            return new ApiResult<string?>()
-            {
-                Data = string.Empty,
-                IsSuccess = false,
-                MetaData = new()
-                {
-                    AppStatusCode = AppStatusCode.BadRequest,
-                    Message = JoinErrors()
-                }
-            };
-        }
         var user = await _userFacade.GetUserByPhoneNumber(loginViewModel.PhoneNumber);
         if (user == null)
         {
