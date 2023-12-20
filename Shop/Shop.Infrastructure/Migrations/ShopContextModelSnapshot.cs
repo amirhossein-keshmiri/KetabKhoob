@@ -84,7 +84,7 @@ namespace Shop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Shop.Domain.OrderAgg.Order", b =>
@@ -242,7 +242,7 @@ namespace Shop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Banners");
+                    b.ToTable("Banners", (string)null);
                 });
 
             modelBuilder.Entity("Shop.Domain.SiteEntities.Slider", b =>
@@ -273,7 +273,7 @@ namespace Shop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("Shop.Domain.UserAgg.User", b =>
@@ -337,7 +337,7 @@ namespace Shop.Infrastructure.Migrations
                         .WithMany("Childs")
                         .HasForeignKey("ParentId");
 
-                    b.OwnsOne("Common.Domain.ValueObjects.SeoData", "SeoData", b1 =>
+                    b.OwnsOne("Shop.Domain.CategoryAgg.Category.SeoData#Common.Domain.ValueObjects.SeoData", "SeoData", b1 =>
                         {
                             b1.Property<long>("CategoryId")
                                 .HasColumnType("bigint");
@@ -384,7 +384,7 @@ namespace Shop.Infrastructure.Migrations
 
             modelBuilder.Entity("Shop.Domain.OrderAgg.Order", b =>
                 {
-                    b.OwnsOne("Shop.Domain.OrderAgg.OrderAddress", "Address", b1 =>
+                    b.OwnsOne("Shop.Domain.OrderAgg.Order.Address#Shop.Domain.OrderAgg.OrderAddress", "Address", b1 =>
                         {
                             b1.Property<long>("Id")
                                 .ValueGeneratedOnAdd()
@@ -450,7 +450,28 @@ namespace Shop.Infrastructure.Migrations
                             b1.Navigation("Order");
                         });
 
-                    b.OwnsMany("Shop.Domain.OrderAgg.OrderItem", "Items", b1 =>
+                    b.OwnsOne("Shop.Domain.OrderAgg.Order.Discount#Shop.Domain.OrderAgg.ValueObjects.OrderDiscount", "Discount", b1 =>
+                        {
+                            b1.Property<long>("OrderId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<int>("DiscountAmount")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("DiscountTitle")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders", "order");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.OwnsMany("Shop.Domain.OrderAgg.Order.Items#Shop.Domain.OrderAgg.OrderItem", "Items", b1 =>
                         {
                             b1.Property<long>("OrderId")
                                 .HasColumnType("bigint");
@@ -481,28 +502,7 @@ namespace Shop.Infrastructure.Migrations
                                 .HasForeignKey("OrderId");
                         });
 
-                    b.OwnsOne("Shop.Domain.OrderAgg.ValueObjects.OrderDiscount", "Discount", b1 =>
-                        {
-                            b1.Property<long>("OrderId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("DiscountAmount")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("DiscountTitle")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)");
-
-                            b1.HasKey("OrderId");
-
-                            b1.ToTable("Orders", "order");
-
-                            b1.WithOwner()
-                                .HasForeignKey("OrderId");
-                        });
-
-                    b.OwnsOne("Shop.Domain.OrderAgg.ValueObjects.OrderShippingMethod", "ShippingMethod", b1 =>
+                    b.OwnsOne("Shop.Domain.OrderAgg.Order.ShippingMethod#Shop.Domain.OrderAgg.ValueObjects.OrderShippingMethod", "ShippingMethod", b1 =>
                         {
                             b1.Property<long>("OrderId")
                                 .HasColumnType("bigint");
@@ -533,7 +533,37 @@ namespace Shop.Infrastructure.Migrations
 
             modelBuilder.Entity("Shop.Domain.ProductAgg.Product", b =>
                 {
-                    b.OwnsOne("Common.Domain.ValueObjects.SeoData", "SeoData", b1 =>
+                    b.OwnsMany("Shop.Domain.ProductAgg.Product.Images#Shop.Domain.ProductAgg.ProductImage", "Images", b1 =>
+                        {
+                            b1.Property<long>("ProductId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<long>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bigint");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<long>("Id"), 1L, 1);
+
+                            b1.Property<DateTime>("CreationDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("ImageName")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)");
+
+                            b1.Property<int>("Sequence")
+                                .HasColumnType("int");
+
+                            b1.HasKey("ProductId", "Id");
+
+                            b1.ToTable("Images", "product");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
+                    b.OwnsOne("Shop.Domain.ProductAgg.Product.SeoData#Common.Domain.ValueObjects.SeoData", "SeoData", b1 =>
                         {
                             b1.Property<long>("ProductId")
                                 .HasColumnType("bigint");
@@ -574,37 +604,7 @@ namespace Shop.Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.OwnsMany("Shop.Domain.ProductAgg.ProductImage", "Images", b1 =>
-                        {
-                            b1.Property<long>("ProductId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("bigint");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<long>("Id"), 1L, 1);
-
-                            b1.Property<DateTime>("CreationDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("ImageName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)");
-
-                            b1.Property<int>("Sequence")
-                                .HasColumnType("int");
-
-                            b1.HasKey("ProductId", "Id");
-
-                            b1.ToTable("Images", "product");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductId");
-                        });
-
-                    b.OwnsMany("Shop.Domain.ProductAgg.ProductSpecification", "Specifications", b1 =>
+                    b.OwnsMany("Shop.Domain.ProductAgg.Product.Specifications#Shop.Domain.ProductAgg.ProductSpecification", "Specifications", b1 =>
                         {
                             b1.Property<long>("ProductId")
                                 .HasColumnType("bigint");
@@ -646,7 +646,7 @@ namespace Shop.Infrastructure.Migrations
 
             modelBuilder.Entity("Shop.Domain.RoleAgg.Role", b =>
                 {
-                    b.OwnsMany("Shop.Domain.RoleAgg.RolePermission", "Permissions", b1 =>
+                    b.OwnsMany("Shop.Domain.RoleAgg.Role.Permissions#Shop.Domain.RoleAgg.RolePermission", "Permissions", b1 =>
                         {
                             b1.Property<long>("RoleId")
                                 .HasColumnType("bigint");
@@ -676,7 +676,7 @@ namespace Shop.Infrastructure.Migrations
 
             modelBuilder.Entity("Shop.Domain.SellerAgg.Seller", b =>
                 {
-                    b.OwnsMany("Shop.Domain.SellerAgg.SellerInventory", "Inventories", b1 =>
+                    b.OwnsMany("Shop.Domain.SellerAgg.Seller.Inventories#Shop.Domain.SellerAgg.SellerInventory", "Inventories", b1 =>
                         {
                             b1.Property<long>("Id")
                                 .ValueGeneratedOnAdd()
@@ -719,7 +719,7 @@ namespace Shop.Infrastructure.Migrations
 
             modelBuilder.Entity("Shop.Domain.UserAgg.User", b =>
                 {
-                    b.OwnsMany("Shop.Domain.UserAgg.UserAddress", "Addresses", b1 =>
+                    b.OwnsMany("Shop.Domain.UserAgg.User.Addresses#Shop.Domain.UserAgg.UserAddress", "Addresses", b1 =>
                         {
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint");
@@ -779,7 +779,7 @@ namespace Shop.Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
 
-                            b1.OwnsOne("Common.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b2 =>
+                            b1.OwnsOne("Shop.Domain.UserAgg.User.Addresses#Shop.Domain.UserAgg.UserAddress.PhoneNumber#Common.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b2 =>
                                 {
                                     b2.Property<long>("UserAddressUserId")
                                         .HasColumnType("bigint");
@@ -805,7 +805,7 @@ namespace Shop.Infrastructure.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsMany("Shop.Domain.UserAgg.UserRole", "Roles", b1 =>
+                    b.OwnsMany("Shop.Domain.UserAgg.User.Roles#Shop.Domain.UserAgg.UserRole", "Roles", b1 =>
                         {
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint");
@@ -832,7 +832,7 @@ namespace Shop.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("Shop.Domain.UserAgg.UserToken", "Tokens", b1 =>
+                    b.OwnsMany("Shop.Domain.UserAgg.User.Tokens#Shop.Domain.UserAgg.UserToken", "Tokens", b1 =>
                         {
                             b1.Property<long>("Id")
                                 .ValueGeneratedOnAdd()
@@ -877,7 +877,7 @@ namespace Shop.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("Shop.Domain.UserAgg.Wallet", "Wallets", b1 =>
+                    b.OwnsMany("Shop.Domain.UserAgg.User.Wallets#Shop.Domain.UserAgg.Wallet", "Wallets", b1 =>
                         {
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint");

@@ -54,7 +54,7 @@ app.UseSwaggerUI();
 
 
 app.UseHttpsRedirection();
-
+app.UseCors("ShopApi");
 app.UseAuthentication();
 app.UseAuthorization();
 
