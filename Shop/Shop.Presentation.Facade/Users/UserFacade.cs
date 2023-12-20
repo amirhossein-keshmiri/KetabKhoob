@@ -10,6 +10,7 @@ using Shop.Query.Users.DTOs;
 using Shop.Query.Users.GetByFilter;
 using Shop.Query.Users.GetById;
 using Shop.Query.Users.GetByPhoneNumber;
+using Shop.Query.Users.UserTokens.GetByJwtToken;
 using Shop.Query.Users.UserTokens.GetByRefreshToken;
 
 namespace Shop.Presentation.Facade.Users;
@@ -70,5 +71,10 @@ internal class UserFacade : IUserFacade
         return await _mediator.Send(new GetUserTokenByRefreshTokenQuery(hashRefreshToken));
     }
 
+    public Task<UserTokenDto?> GetUserTokenByJwtToken(string jwtToken)
+    {
+        var hashJwtToken = Sha256Hasher.Hash(jwtToken);
+        return _mediator.Send(new GetUserTokenByJwtTokenQuery(hashJwtToken));
+    }
 }
 
