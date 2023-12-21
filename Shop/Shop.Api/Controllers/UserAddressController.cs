@@ -7,9 +7,11 @@ using Shop.Application.Users.EditAddress;
 using Shop.Presentation.Facade.Users.Addresses;
 using Shop.Query.Users.DTOs;
 using Shop.Application.Users.DeleteAddress;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Shop.Api.Controllers;
 
+[Authorize]
 public class UserAddressController : ApiController
 {
     private readonly IUserAddressFacade _userAddress;

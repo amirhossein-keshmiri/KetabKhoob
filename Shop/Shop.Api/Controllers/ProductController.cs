@@ -1,9 +1,12 @@
 ﻿using Common.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Api.Infrastructure.Security;
 using Shop.Application.Products.AddImage;
 using Shop.Application.Products.Create;
 using Shop.Application.Products.Edit;
 using Shop.Application.Products.RemoveImage;
+using Shop.Domain.RoleAgg.Enums;
 using Shop.Presentation.Facade.Products;
 using Shop.Query.Products.DTOs;
 
@@ -18,12 +21,14 @@ public class ProductController : ApiController
         _productFacade = productFacade;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ApiResult<ProductFilterResult>> GetProductByFilter([FromQuery] ProductFilterParams filterParams)
     {
         return QueryResult(await _productFacade.GetProductsByFilter(filterParams));
     }
 
+    [AllowAnonymous]
     [HttpGet("{productId}")]
     public async Task<ApiResult<ProductDto?>> GetProductById(long productId)
     {
@@ -31,7 +36,7 @@ public class ProductController : ApiController
         return QueryResult(product);
     }
 
-
+    [AllowAnonymous]
     [HttpGet("bySlug/{slug}")]
     public async Task<ApiResult<ProductDto?>> GetProductBySlug(string slug)
     {
@@ -39,6 +44,7 @@ public class ProductController : ApiController
         return QueryResult(product);
     }
 
+    [PermissionChecker(Permission.Create_Product)]
     [HttpPost]
     public async Task<ApiResult> CreateProduct([FromForm] CreateProductCommand command)
     {
@@ -46,6 +52,7 @@ public class ProductController : ApiController
         return CommandResult(result);
     }
 
+    [PermissionChecker(Permission.AddImage_Product)]
     [HttpPost("images")]
     public async Task<ApiResult> AddImage([FromForm] AddProductImageCommand command)
     {
@@ -53,6 +60,7 @@ public class ProductController : ApiController
         return CommandResult(result);
     }
 
+    [PermissionChecker(Permission.RemoveImage_Product)]
     [HttpDelete("images")]
     public async Task<ApiResult> RemoveImage(RemoveProductImageCommand command)
     {
@@ -60,6 +68,7 @@ public class ProductController : ApiController
         return CommandResult(result);
     }
 
+    [PermissionChecker(Permission.Edit_Product)]
     [HttpPut]
     public async Task<ApiResult> EditProduct([FromForm] EditProductCommand command)
     {

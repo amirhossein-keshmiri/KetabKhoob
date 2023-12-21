@@ -1,7 +1,10 @@
 ﻿using Common.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Api.Infrastructure.Security;
 using Shop.Application.SiteEntities.Sliders.Create;
 using Shop.Application.SiteEntities.Sliders.Edit;
+using Shop.Domain.RoleAgg.Enums;
 using Shop.Presentation.Facade.SiteEntities.Slider;
 using Shop.Query.SiteEntities.DTOs;
 
@@ -17,6 +20,7 @@ public class SliderController : ApiController
         _sliderFacade = sliderFacade;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ApiResult<List<SliderDto>>> GetList()
     {
@@ -24,6 +28,7 @@ public class SliderController : ApiController
         return QueryResult(result);
     }
 
+    [PermissionChecker(Permission.View_Slider)]
     [HttpGet("{id}")]
     public async Task<ApiResult<SliderDto?>> GetById(long id)
     {
@@ -31,6 +36,7 @@ public class SliderController : ApiController
         return QueryResult(result);
     }
 
+    [PermissionChecker(Permission.Create_Slider)]
     [HttpPost]
     public async Task<ApiResult> Create([FromForm] CreateSliderCommand command)
     {
@@ -38,6 +44,7 @@ public class SliderController : ApiController
         return CommandResult(result);
     }
 
+    [PermissionChecker(Permission.Edit_Slider)]
     [HttpPut]
     public async Task<ApiResult> Edit([FromForm] EditSliderCommand command)
     {

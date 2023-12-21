@@ -1,10 +1,11 @@
-﻿using Common.Application;
-using Common.AspNetCore;
-using Microsoft.AspNetCore.Http;
+﻿using Common.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Api.Infrastructure.Security;
 using Shop.Application.Categories.AddChild;
 using Shop.Application.Categories.Create;
 using Shop.Application.Categories.Edit;
+using Shop.Domain.RoleAgg.Enums;
 using Shop.Presentation.Facade.Categories;
 using Shop.Query.Categories.DTOs;
 using System.Net;
@@ -21,6 +22,7 @@ namespace Shop.Api.Controllers
             _categoryFacade = categoryFacade;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ApiResult<List<CategoryDto>>> GetCategories()
         {
@@ -28,6 +30,7 @@ namespace Shop.Api.Controllers
             return QueryResult(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ApiResult<CategoryDto>> GetCategoryById(long id)
         {
@@ -35,6 +38,7 @@ namespace Shop.Api.Controllers
             return QueryResult(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("getChild/{parentId}")]
         public async Task<ApiResult<List<ChildCategoryDto>>> GetCategoriesByParentId(long parentId)
         {
@@ -42,6 +46,7 @@ namespace Shop.Api.Controllers
             return QueryResult(result);
         }
 
+        [PermissionChecker(Permission.Create_Category)]
         [HttpPost]
         public async Task<ApiResult<long>> CreateCategory(CreateCategoryCommand command)
         {
@@ -50,6 +55,7 @@ namespace Shop.Api.Controllers
             return CommandResult(result, HttpStatusCode.Created, url);
         }
 
+        [PermissionChecker(Permission.Create_Category)]
         [HttpPost("AddChild")]
         public async Task<ApiResult<long>> CreateCategory(AddChildCategoryCommand command)
         {
@@ -58,6 +64,7 @@ namespace Shop.Api.Controllers
             return CommandResult(result, HttpStatusCode.Created, url);
         }
 
+        [PermissionChecker(Permission.Edit_Category)]
         [HttpPut]
         public async Task<ApiResult> EditCategory(EditCategoryCommand command)
         {
@@ -65,6 +72,7 @@ namespace Shop.Api.Controllers
             return CommandResult(result);
         }
 
+        [PermissionChecker(Permission.Delete_Category)]
         [HttpDelete("{categoryId}")]
         public async Task<ApiResult> RemoveCategory(long categoryId)
         {
