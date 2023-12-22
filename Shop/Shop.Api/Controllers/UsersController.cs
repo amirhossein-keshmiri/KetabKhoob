@@ -28,6 +28,13 @@ public class UsersController : ApiController
         return QueryResult(result);
     }
 
+    [HttpGet("Current")]
+    public async Task<ApiResult<UserDto>> GetCurrentUser()
+    {
+        var result = await _userFacade.GetUserById(User.GetUserId());
+        return QueryResult(result);
+    }
+
     [HttpGet("{userId}")]
     [PermissionChecker(Permission.View_User)]
     public async Task<ApiResult<UserDto?>> GetById(long userId)
