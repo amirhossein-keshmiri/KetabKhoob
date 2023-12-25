@@ -8,6 +8,7 @@ using Shop.Application.Orders.RemoveItem;
 using Shop.Query.Orders.DTOs;
 using Shop.Query.Orders.GetByFilter;
 using Shop.Query.Orders.GetById;
+using Shop.Query.Orders.GetCurrent;
 
 namespace Shop.Presentation.Facade.Orders;
 internal class OrderFacade : IOrderFacade
@@ -53,5 +54,9 @@ internal class OrderFacade : IOrderFacade
         return await _mediator.Send(new GetOrdersByFilterQuery(filterParams));
     }
 
+    public async Task<OrderDto?> GetCurrentOrder(long userId)
+    {
+        return await _mediator.Send(new GetCurrentUserOrderQuery(userId));
+    }
 }
 
