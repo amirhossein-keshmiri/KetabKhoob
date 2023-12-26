@@ -4,6 +4,6 @@
     {
         None,
         Male,
-        Famele
+        Female
     }
 }
