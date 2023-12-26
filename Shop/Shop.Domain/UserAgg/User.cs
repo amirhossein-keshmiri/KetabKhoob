@@ -57,7 +57,7 @@ namespace Shop.Domain.UserAgg
         public static User RegisterUser(string phoneNumber,string password,
             IUserDomainService userDomainService)
         {
-            return new User("","",phoneNumber,"",password,Gender.None, userDomainService);
+            return new User("","",phoneNumber,null,password,Gender.None, userDomainService);
         }
         public void SetAvatar(string imageName)
         {
