@@ -1,5 +1,6 @@
 ﻿using Common.Application;
 using Shop.Application.Users.AddToken;
+using Shop.Application.Users.ChangePassword;
 using Shop.Application.Users.Create;
 using Shop.Application.Users.Edit;
 using Shop.Application.Users.Register;
@@ -14,6 +15,7 @@ public interface IUserFacade
     Task<OperationResult> CreateUser(CreateUserCommand command);
     Task<OperationResult> AddToken(AddUserTokenCommand command);
     Task<OperationResult> RemoveToken(RemoveUserTokenCommand command);
+    Task<OperationResult> ChangePassword(ChangeUserPasswordCommand command);
 
     Task<UserDto?> GetUserByPhoneNumber(string phoneNumber);
     Task<UserDto?> GetUserById(long userId);
