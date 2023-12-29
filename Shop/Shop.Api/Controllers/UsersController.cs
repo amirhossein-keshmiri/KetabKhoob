@@ -59,8 +59,17 @@ public class UsersController : ApiController
     [PermissionChecker(Permission.Edit_User)]
     public async Task<ApiResult> Edit([FromForm] EditUserCommand command)
     {
-        command.UserId = User.GetUserId();
         var result = await _userFacade.EditUser(command);
+        return CommandResult(result);
+    }
+
+    [HttpPut("Current")]
+    public async Task<ApiResult> EditUser([FromForm] EditUserViewModel command)
+    {
+        var commandModel = new EditUserCommand(User.GetUserId(), command.Avatar, command.Name, command.Family,
+            command.PhoneNumber, command.Email, command.Gender);
+
+        var result = await _userFacade.EditUser(commandModel);
         return CommandResult(result);
     }
 
