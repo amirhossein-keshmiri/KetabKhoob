@@ -8,6 +8,7 @@ using Shop.Presentation.Facade.Users.Addresses;
 using Shop.Query.Users.DTOs;
 using Shop.Application.Users.DeleteAddress;
 using Microsoft.AspNetCore.Authorization;
+using Common.Domain.ValueObjects;
 
 namespace Shop.Api.Controllers;
 
@@ -39,8 +40,14 @@ public class UserAddressController : ApiController
     [HttpPost]
     public async Task<ApiResult> AddAddress(AddUserAddressViewModel viewModel)
     {
-        var command = _mapper.Map<AddUserAddressCommand>(viewModel);
-        command.UserId = User.GetUserId();
+        //var command = _mapper.Map<AddUserAddress
+        //Command>(viewModel);
+        //command.UserId = User.GetUserId();
+
+        var command = new AddUserAddressCommand(User.GetUserId(), viewModel.State, viewModel.City, viewModel.PostalCode,
+           viewModel.PostalAddress, new PhoneNumber(viewModel.PhoneNumber), viewModel.Name,
+           viewModel.Family, viewModel.NationalCode);
+
         var result = await _userAddress.AddAddress(command);
         return CommandResult(result);
     }
@@ -48,7 +55,13 @@ public class UserAddressController : ApiController
     [HttpPut]
     public async Task<ApiResult> EditAddress(EditUserAddressViewModel viewModel)
     {
-        var command = _mapper.Map<EditUserAddressCommand>(viewModel);
+        //var command = _mapper.Map<EditUserAddressCommand>(viewModel);
+
+        var command = new EditUserAddressCommand(User.GetUserId(), viewModel.Id, viewModel.State,
+            viewModel.City, viewModel.PostalCode, viewModel.PostalAddress, 
+            new PhoneNumber(viewModel.PhoneNumber), viewModel.Name,
+           viewModel.Family, viewModel.NationalCode);
+
         command.UserId = User.GetUserId();
         var result = await _userAddress.EditAddress(command);
         return CommandResult(result);
