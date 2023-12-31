@@ -9,6 +9,7 @@ using Shop.Query.Users.DTOs;
 using Shop.Application.Users.DeleteAddress;
 using Microsoft.AspNetCore.Authorization;
 using Common.Domain.ValueObjects;
+using Shop.Application.Users.SetActiveAddress;
 
 namespace Shop.Api.Controllers;
 
@@ -74,5 +75,13 @@ public class UserAddressController : ApiController
         return CommandResult(result);
     }
 
+    [HttpPut("SetActiveAddress/{addressId}")]
+    public async Task<ApiResult> SetAddressActive(long addressId)
+    {
+        var command = new SetActiveUserAddressCommand(User.GetUserId(), addressId);
+
+        var result = await _userAddress.SetActiveAddress(command);
+        return CommandResult(result);
+    }
 }
 

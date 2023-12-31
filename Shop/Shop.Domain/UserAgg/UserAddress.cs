@@ -56,7 +56,11 @@ namespace Shop.Domain.UserAgg
         {
             ActiveAddress = true;
         }
+        public void SetDeActive()
+        {
+            ActiveAddress = false;
 
+        }
         public void Guard(string state, string city, string postalCode,
            string postalAddress, PhoneNumber phoneNumber, string name, string family, string nationalCode)
         {
