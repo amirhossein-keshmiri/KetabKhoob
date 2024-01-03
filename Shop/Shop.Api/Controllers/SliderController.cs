@@ -51,5 +51,13 @@ public class SliderController : ApiController
         var result = await _sliderFacade.EditSlider(command);
         return CommandResult(result);
     }
+
+    [PermissionChecker(Permission.Delete_Slider)]
+    [HttpDelete("{sliderId}")]
+    public async Task<ApiResult> Delete(long sliderId)
+    {
+        var result = await _sliderFacade.DeleteSlider(sliderId);
+        return CommandResult(result);
+    }
 }
 
