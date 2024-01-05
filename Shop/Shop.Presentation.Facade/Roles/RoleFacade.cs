@@ -2,6 +2,7 @@
 using MediatR;
 using Shop.Application.Roles.Create;
 using Shop.Application.Roles.Edit;
+using Shop.Application.Roles.Remove;
 using Shop.Query.Roles.DTOs;
 using Shop.Query.Roles.GetById;
 using Shop.Query.Roles.GetList;
@@ -23,6 +24,10 @@ internal class RoleFacade : IRoleFacade
     public async Task<OperationResult> EditRole(EditRoleCommand command)
     {
         return await _mediator.Send(command);
+    }
+    public async Task<OperationResult> Remove(long roleId)
+    {
+        return await _mediator.Send(new RemoveRoleCommand(roleId));
     }
 
     public async Task<RoleDto?> GetRoleById(long roleId)

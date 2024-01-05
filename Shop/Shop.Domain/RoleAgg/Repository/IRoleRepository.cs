@@ -4,5 +4,6 @@ namespace Shop.Domain.RoleAgg.Repository
 {
     public interface IRoleRepository : IBaseRepository<Role>
     {
+        Task<bool> DeleteRole(long roleId);
     }
 }

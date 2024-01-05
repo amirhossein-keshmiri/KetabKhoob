@@ -46,5 +46,12 @@ public class RoleController : ApiController
         var result = await _roleFacade.EditRole(command);
         return CommandResult(result);
     }
+
+    [HttpDelete("{roleId}")]
+    public async Task<ApiResult> RemoveRole(long roleId)
+    {
+        var result = await _roleFacade.Remove(roleId);
+        return CommandResult(result);
+    }
 }
 
