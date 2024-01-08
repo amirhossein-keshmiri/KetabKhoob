@@ -66,8 +66,16 @@ public class UsersController : ApiController
     [HttpPut("Current")]
     public async Task<ApiResult> EditUser([FromForm] EditUserViewModel command)
     {
-        var commandModel = new EditUserCommand(User.GetUserId(), command.Avatar, command.Name, command.Family,
-            command.PhoneNumber, command.Email, command.Gender);
+        var commandModel = new EditUserCommand()
+        {
+            UserId = User.GetUserId(),
+            Avatar = command.Avatar,
+            Name = command.Name,
+            Family = command.Family,
+            Email = command.Email,
+            PhoneNumber = command.PhoneNumber,
+            Gender = command.Gender
+        };
 
         var result = await _userFacade.EditUser(commandModel);
         return CommandResult(result);
