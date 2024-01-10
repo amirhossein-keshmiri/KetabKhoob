@@ -7,6 +7,7 @@ using Shop.Api.ViewModels.Users;
 using Shop.Application.Users.ChangePassword;
 using Shop.Application.Users.Create;
 using Shop.Application.Users.Edit;
+using Shop.Application.Users.SetRole;
 using Shop.Domain.RoleAgg.Enums;
 using Shop.Presentation.Facade.Users;
 using Shop.Query.Users.DTOs;
@@ -87,6 +88,13 @@ public class UsersController : ApiController
         var changePasswordModel = _mapper.Map<ChangeUserPasswordCommand>(command);
         changePasswordModel.UserId = User.GetUserId();
         var result = await _userFacade.ChangePassword(changePasswordModel);
+        return CommandResult(result);
+    }
+
+    [HttpPost("SetUserRole")]
+    public async Task<ApiResult> SetRolesToUser(SetUserRoleCommand command)
+    {
+        var result = await _userFacade.SetUserRole(command);
         return CommandResult(result);
     }
 }

@@ -7,6 +7,7 @@ using Shop.Application.Users.Create;
 using Shop.Application.Users.Edit;
 using Shop.Application.Users.Register;
 using Shop.Application.Users.RemoveToken;
+using Shop.Application.Users.SetRole;
 using Shop.Query.Users.DTOs;
 using Shop.Query.Users.GetByFilter;
 using Shop.Query.Users.GetById;
@@ -52,6 +53,10 @@ internal class UserFacade : IUserFacade
 
     }
     public async Task<OperationResult> ChangePassword(ChangeUserPasswordCommand command)
+    {
+        return await _mediator.Send(command);
+    }
+    public async Task<OperationResult> SetUserRole(SetUserRoleCommand command)
     {
         return await _mediator.Send(command);
     }

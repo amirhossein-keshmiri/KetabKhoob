@@ -2,6 +2,7 @@
 using Common.Domain.Exceptions;
 using Shop.Domain.UserAgg.Enums;
 using Shop.Domain.UserAgg.Services;
+using System.Net;
 
 namespace Shop.Domain.UserAgg
 {
@@ -38,7 +39,7 @@ namespace Shop.Domain.UserAgg
         public bool IsActive { get; set; }
 
         public Gender Gender { get; private set; }
-        public List<UserRole> Roles { get; }
+        public List<UserRole> Roles { get; private set; }
         public List<Wallet> Wallets { get; }
         public List<UserAddress> Addresses { get;  }
         public List<UserToken> Tokens { get; }
@@ -122,6 +123,11 @@ namespace Shop.Domain.UserAgg
             roles.ForEach(f=>f.UserId =  Id);
             Roles.Clear();
             Roles.AddRange(roles);
+        }
+
+        public void SetUserRole(List<UserRole> roles)
+        {
+            Roles = roles;
         }
 
         public void AddToken(string hashJwtToken, string hashRefreshToken, DateTime tokenExpireDate, 
