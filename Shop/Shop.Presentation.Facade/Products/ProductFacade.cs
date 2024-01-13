@@ -1,5 +1,7 @@
 ﻿using Common.Application;
+using Common.CacheHelper;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Shop.Application.Products.AddImage;
 using Shop.Application.Products.Create;
 using Shop.Application.Products.Edit;
@@ -16,7 +18,7 @@ internal class ProductFacade : IProductFacade
 {
 
     private readonly IMediator _mediator;
-
+    private readonly IDistributedCache _cache;
     public ProductFacade(IMediator mediator)
     {
         _mediator = mediator;
@@ -29,15 +31,31 @@ internal class ProductFacade : IProductFacade
 
     public async Task<OperationResult> EditProduct(EditProductCommand command)
     {
+        await _cache.RemoveAsync(CacheKeys.Product(command.Slug));
         return await _mediator.Send(command);
     }
     public async Task<OperationResult> AddImage(AddProductImageCommand command)
     {
-        return await _mediator.Send(command);
+        var result = await _mediator.Send(command);
+        if (result.Status == OperationResultStatus.Success)
+        {
+            var product = await GetProductById(command.ProductId);
+            await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
+            await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
+
+        }
+        return result;
     }
     public async Task<OperationResult> RemoveImage(RemoveProductImageCommand command)
     {
-        return await _mediator.Send(command);
+        var result = await _mediator.Send(command);
+        if (result.Status == OperationResultStatus.Success)
+        {
+            var product = await GetProductById(command.ProductId);
+            await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
+            await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
+        }
+        return result;
     }
 
     public async Task<ProductDto?> GetProductById(long productId)
@@ -47,7 +65,10 @@ internal class ProductFacade : IProductFacade
 
     public async Task<ProductDto?> GetProductBySlug(string slug)
     {
-        return await _mediator.Send(new GetProductBySlugQuery(slug));
+        return await _cache.GetOrSet(CacheKeys.Product(slug), () =>
+        {
+            return _mediator.Send(new GetProductBySlugQuery(slug));
+        });
     }
 
     public async Task<ProductFilterResult> GetProductsByFilter(ProductFilterParams filterParams)
