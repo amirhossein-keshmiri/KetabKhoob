@@ -31,30 +31,35 @@ internal class ProductFacade : IProductFacade
 
     public async Task<OperationResult> EditProduct(EditProductCommand command)
     {
-        await _cache.RemoveAsync(CacheKeys.Product(command.Slug));
-        return await _mediator.Send(command);
+        var result = await _mediator.Send(command);
+        //if(result.Status == OperationResultStatus.Success)
+        //{
+        //    await _cache.RemoveAsync(CacheKeys.Product(command.Slug));
+        //}
+        return result;
+        
     }
     public async Task<OperationResult> AddImage(AddProductImageCommand command)
     {
         var result = await _mediator.Send(command);
-        if (result.Status == OperationResultStatus.Success)
-        {
-            var product = await GetProductById(command.ProductId);
-            await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
-            await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
+        //if (result.Status == OperationResultStatus.Success)
+        //{
+        //    var product = await GetProductById(command.ProductId);
+        //    await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
+        //    await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
 
-        }
+        //}
         return result;
     }
     public async Task<OperationResult> RemoveImage(RemoveProductImageCommand command)
     {
         var result = await _mediator.Send(command);
-        if (result.Status == OperationResultStatus.Success)
-        {
-            var product = await GetProductById(command.ProductId);
-            await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
-            await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
-        }
+        //if (result.Status == OperationResultStatus.Success)
+        //{
+        //    var product = await GetProductById(command.ProductId);
+        //    await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
+        //    await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
+        //}
         return result;
     }
 

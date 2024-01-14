@@ -35,14 +35,13 @@ builder.Services.AddControllers()
 
 //builder.Services.AddDistributedMemoryCache();
 
-//below config must first run redis in Docker (with port 6379)
+//for using below config, first run redis in Docker (with port 6379)
 builder.Services.AddDistributedRedisCache(options =>
 {
     options.Configuration = "localhost:6379";
 });
 //***************** End Distributed Cache *****************
 
-//builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
