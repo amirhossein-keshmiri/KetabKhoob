@@ -6,6 +6,7 @@ using Shop.Application.Products.AddImage;
 using Shop.Application.Products.Create;
 using Shop.Application.Products.Edit;
 using Shop.Application.Products.RemoveImage;
+using Shop.Presentation.Facade.Sellers.Inventories;
 using Shop.Query.Products.DTOs;
 using Shop.Query.Products.GetByFilter;
 using Shop.Query.Products.GetById;
@@ -19,9 +20,12 @@ internal class ProductFacade : IProductFacade
 
     private readonly IMediator _mediator;
     private readonly IDistributedCache _cache;
-    public ProductFacade(IMediator mediator)
+    private readonly ISellerInventoryFacade _inventoryFacade;
+    public ProductFacade(IMediator mediator, ISellerInventoryFacade inventoryFacade, IDistributedCache cache)
     {
         _mediator = mediator;
+        _inventoryFacade = inventoryFacade;
+        _cache = cache;
     }
 
     public async Task<OperationResult> CreateProduct(CreateProductCommand command)
@@ -32,34 +36,34 @@ internal class ProductFacade : IProductFacade
     public async Task<OperationResult> EditProduct(EditProductCommand command)
     {
         var result = await _mediator.Send(command);
-        //if(result.Status == OperationResultStatus.Success)
-        //{
-        //    await _cache.RemoveAsync(CacheKeys.Product(command.Slug));
-        //}
+        if (result.Status == OperationResultStatus.Success)
+        {
+            await _cache.RemoveAsync(CacheKeys.Product(command.Slug));
+        }
         return result;
         
     }
     public async Task<OperationResult> AddImage(AddProductImageCommand command)
     {
         var result = await _mediator.Send(command);
-        //if (result.Status == OperationResultStatus.Success)
-        //{
-        //    var product = await GetProductById(command.ProductId);
-        //    await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
-        //    await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
+        if (result.Status == OperationResultStatus.Success)
+        {
+            var product = await GetProductById(command.ProductId);
+            await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
+            await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
 
-        //}
+        }
         return result;
     }
     public async Task<OperationResult> RemoveImage(RemoveProductImageCommand command)
     {
         var result = await _mediator.Send(command);
-        //if (result.Status == OperationResultStatus.Success)
-        //{
-        //    var product = await GetProductById(command.ProductId);
-        //    await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
-        //    await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
-        //}
+        if (result.Status == OperationResultStatus.Success)
+        {
+            var product = await GetProductById(command.ProductId);
+            await _cache.RemoveAsync(CacheKeys.Product(product.Slug));
+            await _cache.RemoveAsync(CacheKeys.ProductSingle(product.Slug));
+        }
         return result;
     }
 
@@ -84,6 +88,24 @@ internal class ProductFacade : IProductFacade
     public async Task<ProductShopResult> GetProductsForShop(ProductShopFilterParam filterParams)
     {
         return await _mediator.Send(new GetProductsForShopQuery(filterParams));
+    }
+
+    public async Task<SingleProductDto?> GetProductBySlugForSinglePage(string slug)
+    {
+        return await _cache.GetOrSet(CacheKeys.Product(slug), async () =>
+        {
+            var product = await _mediator.Send(new GetProductBySlugQuery(slug));
+            if (product == null)
+                return null;
+
+            var inventories = await _inventoryFacade.GetByProductId(product.Id);
+            var model = new SingleProductDto()
+            {
+                Inventories = inventories,
+                ProductDto = product
+            };
+            return model;
+        });
     }
 }
 
