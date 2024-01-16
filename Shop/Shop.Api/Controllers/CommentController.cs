@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shop.Api.Infrastructure.Security;
 using Shop.Application.Comments.ChangeStatus;
 using Shop.Application.Comments.Create;
+using Shop.Application.Comments.Delete;
 using Shop.Application.Comments.Edit;
 using Shop.Domain.CommentAgg.Enums;
 using Shop.Domain.RoleAgg.Enums;
@@ -71,6 +72,14 @@ public class CommentController : ApiController
     public async Task<ApiResult> ChangeCommentStatus(ChangeCommentStatusCommand command)
     {
         var result = await _commentFacade.ChangeStatus(command);
+        return CommandResult(result);
+    }
+
+    [HttpDelete("{commentId}")]
+    [Authorize]
+    public async Task<ApiResult> DeleteComment(long commentId)
+    {
+        var result = await _commentFacade.DeleteComment(new DeleteCommentCommand(commentId, User.GetUserId()));
         return CommandResult(result);
     }
 }
