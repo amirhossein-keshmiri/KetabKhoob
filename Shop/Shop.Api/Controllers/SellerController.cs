@@ -25,13 +25,13 @@ public class SellerController : ApiController
 
     [HttpGet]
     [PermissionChecker(Permission.Seller_Management)]
-    public async Task<ApiResult<SellerFilterResult>> GetSellers(SellerFilterParams filterParams)
+    public async Task<ApiResult<SellerFilterResult>> GetSellers([FromQuery] SellerFilterParams filterParams)
     {
         var result = await _sellerFacade.GetSellersByFilter(filterParams);
         return QueryResult(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{sellerId}")]
     public async Task<ApiResult<SellerDto?>> GetSellerById(long sellerId)
     {
         var result = await _sellerFacade.GetSellerById(sellerId);

@@ -25,6 +25,8 @@ public class SellerByFilterQueryHandler : IQueryHandler<GetSellerByFilterQuery, 
         if (!string.IsNullOrWhiteSpace(@params.ShopName))
             result = result.Where(r => r.ShopName.Contains(@params.ShopName));
 
+        if (@params.Status != null)
+            result = result.Where(r => r.Status == @params.Status);
 
         var skip = (@params.PageId - 1) * @params.Take;
 
