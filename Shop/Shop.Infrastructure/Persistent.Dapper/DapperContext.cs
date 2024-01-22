@@ -21,6 +21,8 @@ public class DapperContext
     public string Sellers => "[seller].Sellers";
     public string UserTokens => "[user].Tokens";
     public string UserRoles => "[user].Roles";
+    public string Users => "[user].Users";
+    public string Comments => "[dbo].Comments";
 
 }
 
