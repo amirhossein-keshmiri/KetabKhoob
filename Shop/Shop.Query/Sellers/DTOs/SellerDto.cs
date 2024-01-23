@@ -6,7 +6,8 @@ namespace Shop.Query.Sellers.DTOs;
 public class SellerDto : BaseDto
 {
     public long UserId { get; set; }
-    public string UserFullName { get; set; }
+    public string Name { get; set; }
+    public string Family { get; set; }
     public string PhoneNumber { get; set; }
     public string ShopName { get; set; }
     public string NationalCode { get; set; }
