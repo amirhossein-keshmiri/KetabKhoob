@@ -19,7 +19,7 @@ internal class GetInventoriesByProductIdQueryHandler :
         var sql = @$"SELECT i.Id, i.SellerId , i.ProductId ,i.Count , i.Price,i.CreationDate , i.DiscountPercentage , s.ShopName ,
                         p.Title as ProductTitle,p.ImageName as ProductImage
             FROM {_context.Inventories} i inner join {_context.Sellers} s on i.SellerId=s.Id  
-            inner join {_context.Products} p on i.ProductId=p.Id WHERE ProductId=@productId";
+            inner join {_context.Products} p on i.ProductId=p.Id WHERE ProductId=@productId and i.Count <> 0";
         var result = await connection.QueryAsync<InventoryDto>(sql, new { productId = request.ProductId });
         return result.ToList();
     }

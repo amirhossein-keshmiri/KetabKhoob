@@ -1,5 +1,6 @@
 ﻿using Common.Application;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Shop.Application.Sellers.AddInventory;
 using Shop.Application.Sellers.EditInventory;
 using Shop.Query.Sellers.DTOs;
@@ -11,10 +12,12 @@ namespace Shop.Presentation.Facade.Sellers.Inventories;
 internal class SellerInventoryFacade : ISellerInventoryFacade
 {
     private readonly IMediator _mediator;
+    private readonly IDistributedCache _cache;
 
-    public SellerInventoryFacade(IMediator mediator)
+    public SellerInventoryFacade(IMediator mediator, IDistributedCache cache)
     {
         _mediator = mediator;
+        _cache = cache;
     }
     public async Task<OperationResult> AddInventory(AddSellerInventoryCommand command)
     {
@@ -23,6 +26,7 @@ internal class SellerInventoryFacade : ISellerInventoryFacade
 
     public async Task<OperationResult> EditInventory(EditSellerInventoryCommand command)
     {
+        //must be remove single product cache
         return await _mediator.Send(command);
     }
 
