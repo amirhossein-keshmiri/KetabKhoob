@@ -2,7 +2,7 @@
 using MediatR;
 
 namespace Common.Query;
-public interface IQuery<TResponse> : IRequest<TResponse> where TResponse : class
+public interface IQuery<TResponse> : IRequest<TResponse> where TResponse : class?
 {
 }
 public class QueryFilter<TResponse, TParam> : IQuery<TResponse>

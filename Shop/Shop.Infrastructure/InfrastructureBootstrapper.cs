@@ -33,7 +33,7 @@ public class InfrastructureBootstrapper
         services.AddTransient<ISliderRepository, SliderRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<ICommentRepository, CommentRepository>();
-        //services.AddTransient<IShippingMethodRepository, ShippingMethodRepository>();
+        services.AddTransient<IShippingMethodRepository, ShippingMethodRepository>();
 
         //services.AddSingleton<ICustomPublisher, CustomPublisher>();
 

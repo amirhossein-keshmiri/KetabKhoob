@@ -50,5 +50,9 @@
         Role_Management,
         Comment_Management,
 
+        Create_ShippingMethod,
+        Edit_ShippingMethod,
+        Delete_ShippingMethod,
+
     }
 }
