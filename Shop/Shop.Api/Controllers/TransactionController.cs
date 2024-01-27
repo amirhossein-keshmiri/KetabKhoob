@@ -1,11 +1,11 @@
 ﻿using Common.Application;
 using Common.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Api.Infrastructure.Gateways.Zibal.DTOs;
 using Shop.Api.Infrastructure.Gateways.Zibal;
+using Shop.Api.Infrastructure.Gateways.Zibal.DTOs;
 using Shop.Api.ViewModels.Transactions;
+using Shop.Application.Orders.Finally;
 using Shop.Presentation.Facade.Orders;
 
 namespace Shop.Api.Controllers;
@@ -67,7 +67,10 @@ public class TransactionController : ApiController
         if (result.Amount != order.TotalPrice)
             return Redirect(errorRedirect);
 
-       //FinallyOrder
+        var commandResult = await _orderFacade.FinallyOrder(new OrderFinallyCommand(orderId));
+
+        if (commandResult.Status == OperationResultStatus.Success)
+            return Redirect(successRedirect);
 
         return Redirect(errorRedirect);
     }

@@ -18,6 +18,7 @@ using Shop.Infrastructure.Persistent.Ef;
 using Microsoft.EntityFrameworkCore;
 using Shop.Infrastructure.Persistent.Dapper;
 using Shop.Infrastructure.Persistent.Ef.CommentAgg;
+using Shop.Infrastructure._Utilities.MediatR;
 
 namespace Shop.Infrastructure;
 public class InfrastructureBootstrapper

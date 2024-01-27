@@ -1,6 +1,7 @@
 ﻿using Common.Domain;
 using Common.Domain.Exceptions;
 using Shop.Domain.OrderAgg.Enums;
+using Shop.Domain.OrderAgg.Events;
 using Shop.Domain.OrderAgg.ValueObjects;
 
 namespace Shop.Domain.OrderAgg
@@ -93,17 +94,25 @@ namespace Shop.Domain.OrderAgg
             currentItem.ChangeCount(newCount);
         }
 
+        public void Finally()
+        {
+            Status = OrderStatus.Finally;
+            LastUpdate = DateTime.Now;
+            AddDomainEvent(new OrderFinalized(Id));
+        }
+
         public void ChangeStatus(OrderStatus status)
         {
             Status = status;
             LastUpdate = DateTime.Now;
         }
 
-        public void CheckOut(OrderAddress address)
+        public void CheckOut(OrderAddress address, OrderShippingMethod shippingMethod)
         {
             ChangeOrderGuard();
 
-            Address = address; 
+            Address = address;
+            ShippingMethod = shippingMethod;
         }
 
         private void ChangeOrderGuard()

@@ -2,17 +2,18 @@
 using Shop.Domain.OrderAgg;
 using Shop.Domain.OrderAgg.Repository;
 using Shop.Domain.OrderAgg.ValueObjects;
+using Shop.Domain.SiteEntities.Repositories;
 
 namespace Shop.Application.Orders.Checkout;
 
 public class CheckoutOrderCommandHandler : IBaseCommandHandler<CheckoutOrderCommand>
 {
     private readonly IOrderRepository _orderRepository;
-    //private IShippingMethodRepository _shippingMethodRepository;
-    public CheckoutOrderCommandHandler(IOrderRepository orderRepository)
+    private IShippingMethodRepository _shippingMethodRepository;
+    public CheckoutOrderCommandHandler(IOrderRepository orderRepository, IShippingMethodRepository shippingMethodRepository)
     {
         _orderRepository = orderRepository;
-        //  _shippingMethodRepository = shippingMethodRepository;
+        _shippingMethodRepository = shippingMethodRepository;
     }
     public async Task<OperationResult> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
     {
@@ -24,7 +25,12 @@ public class CheckoutOrderCommandHandler : IBaseCommandHandler<CheckoutOrderComm
                  request.PostalAddress, request.PhoneNumber, request.Name,
                  request.Family, request.NationalCode);
 
-        currentOrder.CheckOut(address);
+        var shippingMethod = await _shippingMethodRepository.GetAsync(request.ShippingMethodId);
+        if (shippingMethod == null)
+            return OperationResult.Error();
+
+        currentOrder.CheckOut(address, new OrderShippingMethod(shippingMethod.Title, shippingMethod.Cost));
+
         await _orderRepository.Save();
         return OperationResult.Success();
     }
