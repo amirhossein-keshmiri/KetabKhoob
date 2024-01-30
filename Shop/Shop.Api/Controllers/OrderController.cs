@@ -94,5 +94,12 @@ public class OrderController : ApiController
         var result = await _orderFacade.RemoveOrderItem(new RemoveOrderItemCommand(User.GetUserId(), itemId));
         return CommandResult(result);
     }
+
+    [HttpPut("SendOrder/{orderId}")]
+    public async Task<ApiResult> SendOrder(long orderId)
+    {
+        var result = await _orderFacade.SendOrder(orderId);
+        return CommandResult(result);
+    }
 }
 
